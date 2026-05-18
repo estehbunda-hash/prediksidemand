@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NYC Taxi Demand Predictor</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans">
+
+    <nav class="sticky top-0 z-50 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-taxi text-amber-500 text-2xl"></i>
+                    <span class="font-bold text-lg tracking-wider bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent">NYC TAXI DEMAND</span>
+                </div>
+                <div class="hidden md:flex items-center gap-6">
+                    <button onclick="switchTab('home')" class="nav-btn text-amber-500 font-medium cursor-pointer transition-colors" id="btn-home">Homepage</button>
+                    <button onclick="switchTab('prediction')" class="nav-btn text-slate-600 dark:text-slate-300 hover:text-amber-500 font-medium cursor-pointer transition-colors" id="btn-prediction">Prediction Page</button>
+                    <button onclick="switchTab('comparison')" class="nav-btn text-slate-600 dark:text-slate-300 hover:text-amber-500 font-medium cursor-pointer transition-colors" id="btn-comparison">Evaluation Model</button>
+                    <button onclick="switchTab('about')" class="nav-btn text-slate-600 dark:text-slate-300 hover:text-amber-500 font-medium cursor-pointer transition-colors" id="btn-about">About</button>
+                </div>
+                <button onclick="toggleDarkMode()" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-all text-xl cursor-pointer" title="Ubah Tema">
+                    <i id="theme-icon" class="fa-solid fa-moon text-slate-600 dark:text-amber-400"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[calc(100vh-4rem)]">
+
+        <div id="tab-home" class="tab-content active space-y-12" data-aos="fade-up">
+            <div class="text-center max-w-3xl mx-auto space-y-4 py-8">
+                <h1 class="text-4xl sm:text-5xl font-black tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
+                    Sistem Prediksi <br><span class="text-amber-500">Demand Taksi Online New York</span>
+                </h1>
+                <p class="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+                    Aplikasi cerdas berbasis web yang mengintegrasikan 5 algoritma machine learning dan deep learning untuk memprediksi kepadatan order taksi secara real-time berdasarkan analisis spasio-temporal data NYC.
+                </p>
+                <div class="pt-4">
+                    <button onclick="switchTab('prediction')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-6 py-3 rounded-xl font-bold shadow-lg shadow-amber-500/20 transition-all transform hover:-translate-y-0.5 cursor-pointer">
+                        Mulai Prediksi Sekarang <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700/50 text-center" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl mx-auto mb-4 font-bold">LSTM</div>
+                    <h3 class="font-bold text-lg">RNN / LSTM</h3>
+                    <p class="text-xs text-slate-500 mt-1">Deep Learning Arsitektur Urutan Temporal</p>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700/50 text-center" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xl mx-auto mb-4 font-bold">ANN</div>
+                    <h3 class="font-bold text-lg">Artificial NN</h3>
+                    <p class="text-xs text-slate-500 mt-1">Multi-layer Dense TensorFlow Framework</p>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700/50 text-center" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center text-xl mx-auto mb-4 font-bold">KM</div>
+                    <h3 class="font-bold text-lg">K-Means + LR</h3>
+                    <p class="text-xs text-slate-500 mt-1">Clustering Spasial dengan Linear Regression</p>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700/50 text-center" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl mx-auto mb-4 font-bold">LR</div>
+                    <h3 class="font-bold text-lg">Linear Regression</h3>
+                    <p class="text-xs text-slate-500 mt-1">Model Statistik Baseline Super Cepat</p>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700/50 text-center" data-aos="zoom-in" data-aos-delay="500">
+                    <div class="w-12 h-12 rounded-xl bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center justify-center text-xl mx-auto mb-4 font-bold">BP</div>
+                    <h3 class="font-bold text-lg">Manual Backprop</h3>
+                    <p class="text-xs text-slate-500 mt-1">Custom NumPy Loop Neural Network</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-prediction" class="tab-content space-y-8">
+            <div class="border-b border-slate-200 dark:border-slate-700 pb-4">
+                <h2 class="text-2xl font-bold tracking-tight"><i class="fa-solid fa-calculator text-amber-500 mr-2"></i> Simulator Prediksi Real-time</h2>
+                <p class="text-slate-500 text-sm mt-1">Isi parameter di bawah untuk memproses prediksi demand order secara instan melalui 5 kecerdasan model.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                <form id="predictionForm" onsubmit="handlePrediction(event)" class="lg:col-span-1 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-5 shadow-sm" data-aos="fade-right">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Jumlah Penumpang (Passenger Count)</label>
+                        <input type="number" id="passenger_count" min="1" max="6" value="1" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Estimasi Jarak Perjalanan (km)</label>
+                        <input type="number" id="trip_distance_km" min="0.1" max="100.0" step="0.1" value="2.5" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Jam Penjemputan (Pickup Hour)</label>
+                        <select id="pickup_hour" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all">
+                            </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Hari Penjemputan</label>
+                        <select id="pickup_dayofweek" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all">
+                            <option value="0">Senin</option>
+                            <option value="1">Selasa</option>
+                            <option value="2">Rabu</option>
+                            <option value="3">Kamis</option>
+                            <option value="4">Jumat</option>
+                            <option value="5">Sabtu</option>
+                            <option value="6">Minggu</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 py-3 rounded-xl font-bold shadow-md shadow-amber-500/10 cursor-pointer transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Hitung Prediksi Demand
+                    </button>
+                </form>
+
+                <div class="lg:col-span-2 space-y-6">
+                    <div id="predictionLoading" class="hidden bg-white dark:bg-slate-800 p-12 rounded-2xl border border-slate-200 dark:border-slate-700 text-center space-y-4">
+                        <div class="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                        <p class="text-slate-500 font-medium animate-pulse">Menghitung matriks & mengolah feature engineering...</p>
+                    </div>
+
+                    <div id="predictionPlaceholder" class="bg-white dark:bg-slate-800 p-12 rounded-2xl border border-slate-200 dark:border-slate-700 text-center text-slate-400 space-y-3">
+                        <i class="fa-solid fa-layer-group text-4xl text-slate-300"></i>
+                        <p class="font-medium">Silakan isi formulir dan tekan tombol hitung untuk melihat keluaran grafik interaktif.</p>
+                    </div>
+
+                    <div id="predictionResultPanel" class="hidden space-y-6" data-aos="fade-left">
+                        <div class="bg-slate-100 dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 grid grid-cols-3 gap-4 text-center text-sm">
+                            <div>
+                                <span class="block text-xs text-slate-400 font-semibold uppercase">Rush Hour?</span>
+                                <span id="feat-rush" class="font-bold text-amber-500">-</span>
+                            </div>
+                            <div>
+                                <span class="block text-xs text-slate-400 font-semibold uppercase">Weekend?</span>
+                                <span id="feat-weekend" class="font-bold text-amber-500">-</span>
+                            </div>
+                            <div>
+                                <span class="block text-xs text-slate-400 font-semibold uppercase">Segmen Hari</span>
+                                <span id="feat-segment" class="font-bold text-amber-500">-</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                            <h3 class="font-bold text-sm text-slate-400 uppercase tracking-wider mb-4"><i class="fa-solid fa-chart-bar text-amber-500 mr-1"></i> Perbandingan Hasil Prediksi Real-time (Order Count)</h3>
+                            <div class="relative h-64 w-full">
+                                <canvas id="predictionChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-slate-50 dark:bg-slate-700/50 text-xs font-bold uppercase text-slate-500 dark:text-slate-300">
+                                    <tr>
+                                        <th class="p-4">Algoritma</th>
+                                        <th class="p-4 text-center">Prediksi Nilai (Order)</th>
+                                        <th class="p-4 text-center">Confidence Range (95%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="predictionTableBody" class="text-sm divide-y divide-slate-100 dark:divide-slate-700">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-comparison" class="tab-content space-y-8">
+            <div class="border-b border-slate-200 dark:border-slate-700 pb-4">
+                <h2 class="text-2xl font-bold tracking-tight"><i class="fa-solid fa-chart-line text-amber-500 mr-2"></i> Analisis Performa Komparatif</h2>
+                <p class="text-slate-500 text-sm mt-1">Grafik interaktif performa akurasi error (MAE, RMSE) dan koefisien R² berdasarkan pelatihan terminal.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm" data-aos="fade-right">
+                    <h3 class="font-bold text-sm text-slate-400 uppercase tracking-wider mb-4">Confusion Matrix</h3>
+                    <div class="relative h-64 w-full">
+                        <canvas id="errorChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm" data-aos="fade-left">
+                    <h3 class="font-bold text-sm text-slate-400 uppercase tracking-wider mb-4">Training Loss Curve</h3>
+                    <div class="relative h-64 w-full">
+                        <canvas id="r2Chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden" data-aos="fade-up">
+                <div class="p-5 border-b border-slate-100 dark:border-slate-700">
+                    <h3 class="font-bold text-base">Tabel Perbandingan Semua Model</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[600px]">
+                        <thead class="bg-slate-50 dark:bg-slate-700/50 text-xs font-bold uppercase text-slate-500 dark:text-slate-300">
+                            <tr>
+                                <th class="p-4">Algoritma</th>
+                                <th class="p-4 text-center">MAE</th>
+                                <th class="p-4 text-center">RMSE</th>
+                                <th class="p-4 text-center">R² Score</th>
+                                <th class="p-4 text-center">MAPE</th>
+                                <th class="p-4 text-center">Waktu Training</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm divide-y divide-slate-100 dark:divide-slate-700">
+                            <tr>
+                                <td class="p-4 font-bold">LSTM</td>
+                                <td class="p-4 text-center">0.2030</td>
+                                <td class="p-4 text-center text-emerald-500 font-medium">0.2437</td>
+                                <td class="p-4 text-center text-emerald-500 font-bold">0.0766</td>
+                                <td class="p-4 text-center">22.78%</td>
+                                <td class="p-4 text-center text-slate-400">18.92s</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold">ANN</td>
+                                <td class="p-4 text-center text-emerald-500 font-medium">0.1900</td>
+                                <td class="p-4 text-center">0.2462</td>
+                                <td class="p-4 text-center">0.0572</td>
+                                <td class="p-4 text-center">20.25%</td>
+                                <td class="p-4 text-center text-slate-400">20.13s</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold">KMeans</td>
+                                <td class="p-4 text-center">0.2170</td>
+                                <td class="p-4 text-center">0.2503</td>
+                                <td class="p-4 text-center">0.0258</td>
+                                <td class="p-4 text-center">24.44%</td>
+                                <td class="p-4 text-center text-slate-400">53.85s</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold">Linear Regression</td>
+                                <td class="p-4 text-center">0.2172</td>
+                                <td class="p-4 text-center">0.2503</td>
+                                <td class="p-4 text-center">0.0256</td>
+                                <td class="p-4 text-center">24.45%</td>
+                                <td class="p-4 text-center text-amber-500 font-medium">0.02s</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold">Backprop (Manual)</td>
+                                <td class="p-4 text-center text-red-400">0.3069</td>
+                                <td class="p-4 text-center text-red-400">0.3892</td>
+                                <td class="p-4 text-center text-red-400">-1.3556</td>
+                                <td class="p-4 text-center">35.85%</td>
+                                <td class="p-4 text-center text-slate-400">1.51s</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-about" class="tab-content space-y-8" data-aos="fade-up">
+            <div class="border-b border-slate-200 dark:border-slate-700 pb-4">
+                <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                    <i class="fa-solid fa-circle-info text-amber-500 mr-2"></i> About Project
+                </h2>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3 max-w-4xl shadow-sm">
+                <h3 class="text-lg font-bold text-amber-500">Analisis & Prediksi Spasio-Temporal Demand Taksi Online</h3>
+                <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                    Projek ini berfokus pada pengembangan sistem cerdas berbasis <span class="font-semibold text-slate-700 dark:text-slate-200">Data Pipeline</span> dan <span class="font-semibold text-slate-700 dark:text-slate-200">Machine Learning/Deep Learning</span> untuk mengestimasi volume permintaan (<span class="italic">order count</span>) taksi online secara <span class="italic">real-time</span>. Dengan memanfaatkan dataset historis NYC Taxi, sistem mampu menangkap pola perilaku mobilitas urban berdasarkan fluktuasi waktu (temporal) dan posisi geografis (spasial). Hasil prediksi ini sangat berguna untuk manajemen armada, minimalisasi waktu tunggu, serta optimalisasi alokasi pengemudi di area padat.
+                </p>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-4 max-w-4xl shadow-sm">
+                <h3 class="text-lg font-bold text-amber-500">Alur Kerja Sistem (01_preprocessing.py)</h3>
+                <ul class="list-disc list-inside space-y-2.5 text-slate-600 dark:text-slate-300 text-sm">
+                    <li>
+                        <span class="font-semibold text-slate-700 dark:text-slate-200">Data Loading & Sampling:</span> Memuat dataset mentah <code class="bg-slate-50 dark:bg-slate-700/50 px-1 py-0.5 rounded text-slate-600 dark:text-slate-400">NYC.csv</code> dan melakukan sampling acak terdistribusi untuk efisiensi performa komputasi.
+                    </li>
+                    <li>
+                        <span class="font-semibold text-slate-700 dark:text-slate-200">Handle Missing Values:</span> Pengisian otomatis nilai yang hilang (<span class="italic">missing values</span>) menggunakan nilai median untuk kolom numerik dan modus untuk kolom kategorikal.
+                    </li>
+                    <li>
+                        <span class="font-semibold text-slate-700 dark:text-slate-200">Feature Engineering Temporal:</span> Parsing format waktu string menjadi objek datetime terstruktur untuk mengekstraksi komponen jam, hari, bulan, pekan, serta flag dinamis seperti <code class="bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded text-red-400">is_weekend</code>, <code class="bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded text-red-400">is_rush_hour</code>, dan pengelompokan ordinal <code class="bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded text-red-400">time_segment</code>.
+                    </li>
+                    <li>
+                        <span class="font-semibold text-slate-700 dark:text-slate-200">Feature Engineering Spasial:</span> Kalkulasi Geodesik menggunakan rumus formula jarak <span class="italic font-serif text-slate-700 dark:text-slate-200">Haversine</span> berdasarkan koordinat GPS asal dan tujuan untuk menentukan jarak spasial murni (<code class="bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded text-amber-500">trip_distance_km</code>).
+                    </li>
+                    <li>
+                        <span class="font-semibold text-slate-700 dark:text-slate-200">Outlier Removal:</span> Pembersihan data anomali berdasarkan batas durasi perjalanan, kapasitas penumpang, kecepatan ekstrim, serta pembatasan wilayah geografis (<span class="italic">NYC Bounding Box</span>).
+                    </li>
+                    <li>
+                        <span class="font-semibold text-slate-700 dark:text-slate-200">Target Aggregation & Normalisasi:</span> Mengakumulasikan jumlah orderan nyata per jam berdasarkan pembagian skala grid koordinat spasial. Transformasi logaritmik (<code class="bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded text-amber-500">log_order_count</code>) diterapkan untuk mengatasi skewness sebelum discaling menggunakan Z-score StandardScaler.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="space-y-4 max-w-4xl">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">Arsitektur 5 Model Prediksi (02_training_evaluation.py)</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div class="p-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 border-l-4 border-l-blue-600 shadow-sm space-y-1.5">
+                        <h4 class="font-bold text-slate-800 dark:text-slate-100 flex items-center justify-between">
+                            <span>Long Short-Term Memory (LSTM)</span>
+                            <span class="text-xs font-mono bg-blue-50 dark:bg-blue-950/40 text-blue-500 px-2 py-0.5 rounded-full">Deep Learning</span>
+                        </h4>
+                        <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
+                            Arsitektur jaringan saraf tiruan sekuensial (RNN) khusus yang dirancang untuk menangkap pola dependensi jangka panjang. Sebelum training, data direshape menjadi struktur deret waktu untuk mempelajari tren fluktuasi demand dari jam ke jam, menghasilkan performa tren ($R^2$) tertinggi dibanding model lain.
+                        </p>
+                    </div>
+
+                    <div class="p-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 border-l-4 border-l-purple-600 shadow-sm space-y-1.5">
+                        <h4 class="font-bold text-slate-800 dark:text-slate-100 flex items-center justify-between">
+                            <span>Artificial Neural Network (ANN)</span>
+                            <span class="text-xs font-mono bg-purple-50 dark:bg-purple-950/40 text-purple-500 px-2 py-0.5 rounded-full">Deep Learning</span>
+                        </h4>
+                        <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
+                            Model jaringan saraf tiruan dengan lapisan tersembunyi berlapis padat (<span class="italic">Multi-layer Fully Connected Dense</span>) menggunakan konfigurasi susunan <code class="bg-slate-50 dark:bg-slate-700/50 px-1 py-0.2 rounded text-slate-600 dark:text-slate-400">[256, 128, 64]</code> neuron. Dilengkapi fungsi aktivasi <span class="italic">ReLU</span> dan lapisan <span class="italic">Dropout</span> untuk memetakan korelasi fitur non-linear yang kompleks secara stabil.
+                        </p>
+                    </div>
+
+                    <div class="p-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 border-l-4 border-l-slate-500 shadow-sm space-y-1.5">
+                        <h4 class="font-bold text-slate-800 dark:text-slate-100 flex items-center justify-between">
+                            <span>K-Means Clustering + LR</span>
+                            <span class="text-xs font-mono bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full">Hybrid Model</span>
+                        </h4>
+                        <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
+                            Pendekatan pembelajaran tanpa pengawasan (<span class="italic">unsupervised learning</span>) untuk mengelompokkan data ke dalam klaster spasio-temporal berdasarkan nilai kemiripan lokasi geografis GPS dan jam penjemputan. Label hasil pengelompokan terbaik kemudian digunakan sebagai fitur baru untuk memperkuat akurasi regresi.
+                        </p>
+                    </div>
+
+                    <div class="p-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 border-l-4 border-l-amber-500 shadow-sm space-y-1.5">
+                        <h4 class="font-bold text-slate-800 dark:text-slate-100 flex items-center justify-between">
+                            <span>Linear Regression</span>
+                            <span class="text-xs font-mono bg-amber-50 dark:bg-amber-950/40 text-amber-600 px-2 py-0.5 rounded-full">Baseline</span>
+                        </h4>
+                        <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
+                            Model statistik linear tradisional yang digunakan sebagai tolok ukur utama sistem (<span class="italic">baseline model</span>). Algoritma ini bekerja dengan memetakan hubungan linear konstan antar variabel prediktor. Memiliki keunggulan waktu latih tercepat ($0.02\text{ detik}$) namun kurang fleksibel untuk pola anomali perkotaan.
+                        </p>
+                    </div>
+
+                    <div class="p-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 border-l-4 border-l-red-500 md:col-span-2 shadow-sm space-y-1.5">
+                        <h4 class="font-bold text-slate-800 dark:text-slate-100 flex items-center justify-between">
+                            <span>Backpropagation Manual (Custom NumPy NN)</span>
+                            <span class="text-xs font-mono bg-red-50 dark:bg-red-950/40 text-red-500 px-2 py-0.5 rounded-full">Theoretical Study</span>
+                        </h4>
+                        <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
+                            Jaringan saraf tiruan multilapis yang dibangun sepenuhnya dari dasar (<span class="italic">from scratch</span>) menggunakan array matriks <span class="font-semibold">NumPy</span> tanpa framework external (TensorFlow/PyTorch). Kode mencakup pembuatan siklus lingkaran forward pass untuk aktivasi ReLU, kalkulasi error loss, serta proses backward pass (turunan berantai gradient descent) demi kebutuhan pembuktian teoritis akademis informatika.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 py-6 text-center text-xs text-slate-400">
+        &copy; 2026 UTS Kecerdasan Buatan • Dikembangkan Menggunakan Flask & Chart.js
+    </footer>
+
+    <script>
+        AOS.init({ duration: 600, once: true });
+
+        // Generate Dropdown select jam
+        const hourSelect = document.getElementById('pickup_hour');
+        for(let i=0; i<24; i++) {
+            let opt = document.createElement('option');
+            opt.value = i;
+            opt.innerText = i.toString().padStart(2, '0') + ':00';
+            if(i === 12) opt.selected = true;
+            hourSelect.appendChild(opt);
+        }
+
+        // SPA Navigation Tabs Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-amber-500', 'font-medium');
+                btn.classList.add('text-slate-600', 'dark:text-slate-300');
+            });
+            document.getElementById('btn-' + tabId).classList.add('text-amber-500');
+            AOS.refresh();
+        }
+
+        // Dark Mode Controller
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-icon').className = isDark ? 'fa-solid fa-sun text-amber-400' : 'fa-solid fa-moon text-slate-600';
+            updateChartTheme();
+        }
+
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('theme-icon').className = 'fa-solid fa-sun text-amber-400';
+        }
+
+        // Realtime Fetch Simulator Prediksi
+        let predictionChartInstance = null;
+        function handlePrediction(e) {
+            e.preventDefault();
+            document.getElementById('predictionPlaceholder').classList.add('hidden');
+            if (document.getElementById('predictionResultPanel')) document.getElementById('predictionResultPanel').classList.add('hidden');
+            document.getElementById('predictionLoading').classList.remove('hidden');
+
+            const payload = {
+                passenger_count: document.getElementById('passenger_count').value,
+                trip_distance_km: document.getElementById('trip_distance_km').value,
+                pickup_hour: document.getElementById('pickup_hour').value,
+                pickup_dayofweek: document.getElementById('pickup_dayofweek').value
+            };
+
+            setTimeout(() => { 
+                fetch('/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('predictionLoading').classList.add('hidden');
+                    if(data.status === 'success') {
+                        document.getElementById('predictionResultPanel').classList.remove('hidden');
+                        document.getElementById('feat-rush').innerText = data.engineered_features.is_rush_hour;
+                        document.getElementById('feat-weekend').innerText = data.engineered_features.is_weekend;
+                        document.getElementById('feat-segment').innerText = data.engineered_features.time_segment;
+
+                        const tbody = document.getElementById('predictionTableBody');
+                        tbody.innerHTML = '';
+                        const labels = [], values = [];
+
+                        for (const [model, item] of Object.entries(data.results)) {
+                            labels.push(model);
+                            values.push(item.prediction);
+                            tbody.innerHTML += `
+                                <tr>
+                                    <td class="p-4 font-semibold">${model}</td>
+                                    <td class="p-4 text-center font-bold text-amber-500">${item.prediction} order</td>
+                                    <td class="p-4 text-center text-xs text-slate-400">${item.lower_bound} - ${item.upper_bound} order</td>
+                                </tr>`;
+                        }
+
+                        if(predictionChartInstance) predictionChartInstance.destroy();
+                        const ctx = document.getElementById('predictionChart').getContext('2d');
+                        const textColor = document.documentElement.classList.contains('dark') ? '#f8fafc' : '#0f172a';
+                        
+                        predictionChartInstance = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Prediksi Utama (Order Count)',
+                                    data: values,
+                                    backgroundColor: 'rgba(245, 158, 11, 0.75)',
+                                    borderColor: 'rgba(245, 158, 11, 1)',
+                                    borderWidth: 1,
+                                    borderRadius: 6
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: { legend: { labels: { color: textColor } } },
+                                scales: {
+                                    y: { ticks: { color: textColor }, grid: { color: 'rgba(128,128,128,0.1)' } },
+                                    x: { ticks: { color: textColor }, grid: { display: false } }
+                                }
+                            }
+                        });
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('predictionLoading').classList.add('hidden');
+                    alert('Gagal memproses data!');
+                });
+            }, 600);
+        }
+
+        // Render Static Charts Performa Model Evaluasi
+        let errorChartInstance, r2ChartInstance;
+        function initComparisonCharts() {
+            const models = ["LSTM", "ANN", "KMeans", "Linear Regression", "Backprop"];
+            const mae = [0.2030, 0.1900, 0.2170, 0.2172, 0.3069];
+            const rmse = [0.2437, 0.2462, 0.2503, 0.2503, 0.3892];
+            const r2 = [0.0766, 0.0572, 0.0258, 0.0256, -1.3556];
+            const textColor = document.documentElement.classList.contains('dark') ? '#f8fafc' : '#0f172a';
+
+            errorChartInstance = new Chart(document.getElementById('errorChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: models,
+                    datasets: [
+                        { label: 'MAE', data: mae, backgroundColor: 'rgba(59, 130, 246, 0.8)' },
+                        { label: 'RMSE', data: rmse, backgroundColor: 'rgba(168, 85, 247, 0.8)' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: textColor } } },
+                    scales: {
+                        y: { ticks: { color: textColor }, grid: { color: 'rgba(128,128,128,0.1)' } },
+                        x: { ticks: { color: textColor }, grid: { display: false } }
+                    }
+                }
+            });
+
+            r2ChartInstance = new Chart(document.getElementById('r2Chart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: models,
+                    datasets: [{
+                        label: 'R² Score',
+                        data: r2,
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        tension: 0.3,
+                        fill: true,
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: textColor } } },
+                    scales: {
+                        y: { ticks: { color: textColor }, grid: { color: 'rgba(128,128,128,0.1)' } },
+                        x: { ticks: { color: textColor }, grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function updateChartTheme() {
+            const textColor = document.documentElement.classList.contains('dark') ? '#f8fafc' : '#0f172a';
+            [errorChartInstance, r2ChartInstance, predictionChartInstance].forEach(chart => {
+                if(chart) {
+                    chart.options.plugins.legend.labels.color = textColor;
+                    chart.options.scales.y.ticks.color = textColor;
+                    chart.options.scales.x.ticks.color = textColor;
+                    chart.update();
+                }
+            });
+        }
+
+        window.onload = () => { initComparisonCharts(); };
+    </script>
+</body>
+</html>
