@@ -106,10 +106,11 @@ Buka browser dan akses: `http://127.0.0.1:5000`
 
 | Sumber | Link |
 |---|---|
-| 🌐 Demo Aplikasi | [Link Demo](https://your-demo-url.com) |
+| 🌐 Demo Aplikasi | [Link Demo](https://prediksidemand.my.id) |
 | 📄 Laporan | [Link Laporan](https://your-report-url.com) |
 | 🎥 Video YouTube | [Link Video](https://youtube.com/watch?v=your-video-id) |
 | 🌐 Dataset | [Link Dataset](https://www.kaggle.com/code/asifsaad/nyc-taxi-trip-duration) |
+| 📄 Github | [Link Github](https://github.com/put85i/prediksidemandtaxi.git) |
 ---
 
 ## Lisensi
