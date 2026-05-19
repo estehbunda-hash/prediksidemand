@@ -109,7 +109,7 @@ Buka browser dan akses: `http://127.0.0.1:5000`
 | 🌐 Demo Aplikasi | [Link Demo](https://www.prediksidomand.my.id/) |
 | 🎥 Video YouTube | [Link Video](https://youtu.be/I_4aOnquYdk) |
 | 🌐 Dataset | [Link Dataset](https://www.kaggle.com/code/asifsaad/nyc-taxi-trip-duration) |
-| 📄 Github | [Link Github](https://github.com/put85i/prediksidemandtaxi.git) |
+| 📄 Github | [Link Github](https://github.com/estehbunda-hash/prediksidemand.git) |
 ---
 
 ## Lisensi
